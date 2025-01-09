@@ -1,0 +1,36 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: backend-dev
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://karine:karine@db/backend_development
+    depends_on:
+      - db
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: frontend-dev
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/code
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: karine
+      POSTGRES_PASSWORD: karine
+      POSTGRES_DB: backend_development
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
